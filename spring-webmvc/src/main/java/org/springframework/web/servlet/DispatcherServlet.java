@@ -486,12 +486,15 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	protected void initStrategies(ApplicationContext context) {
 		initMultipartResolver(context);
+		//初始化支持国际化的LocalResolver
 		initLocaleResolver(context);
 		initThemeResolver(context);
+		//初始化支持request映射的HandlerMappings
 		initHandlerMappings(context);
 		initHandlerAdapters(context);
 		initHandlerExceptionResolvers(context);
 		initRequestToViewNameTranslator(context);
+		//初始化 用来生成视图的ViewResolver
 		initViewResolvers(context);
 		initFlashMapManager(context);
 	}
@@ -570,6 +573,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	private void initHandlerMappings(ApplicationContext context) {
 		this.handlerMappings = null;
 
+		// 导入所有的HandlerMapping Bean
+		// detectAllHandlerMappings 默认值true 即 从所有的ioc容器中取bean(包括DispatcherServlet的ioc容器和其双亲上下文)
 		if (this.detectAllHandlerMappings) {
 			// Find all HandlerMappings in the ApplicationContext, including ancestor contexts.
 			Map<String, HandlerMapping> matchingBeans =
@@ -580,7 +585,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				AnnotationAwareOrderComparator.sort(this.handlerMappings);
 			}
 		}
-		else {
+		else { // 根据名称从当前IOC容器中获取handlerMapping
 			try {
 				HandlerMapping hm = context.getBean(HANDLER_MAPPING_BEAN_NAME, HandlerMapping.class);
 				this.handlerMappings = Collections.singletonList(hm);
@@ -592,6 +597,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Ensure we have at least one HandlerMapping, by registering
 		// a default HandlerMapping if no other mappings are found.
+        // 如果没有找到handlerMapping，则从DispatcherServlet.properties配置文件中读取HandlerMapping，并设置
 		if (this.handlerMappings == null) {
 			this.handlerMappings = getDefaultStrategies(context, HandlerMapping.class);
 			if (logger.isDebugEnabled()) {

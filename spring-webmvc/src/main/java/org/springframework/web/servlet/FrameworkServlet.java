@@ -557,6 +557,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			// Either the context is not a ConfigurableApplicationContext with refresh
 			// support or the context injected at construction time had already been
 			// refreshed -> trigger initial onRefresh manually here.
+
+			// 启动对SpringMvc框架的初始化
 			onRefresh(wac);
 		}
 
