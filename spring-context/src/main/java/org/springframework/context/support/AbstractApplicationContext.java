@@ -512,6 +512,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
+			/**
+			 * 在子类中获取BeanFactory  完成对BeanDefinition的载入
+			 */
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -519,30 +522,57 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
+				/**
+				 * 设置BeanFactory的后置处理
+				 */
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
+				/**
+				 * 调用BeanFactory的后置处理
+				 */
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
+				/**
+				 * 注册Bean的后置处理，在Bean创建时调用
+				 */
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
+				/**
+				 * 对上下文中的消息源进行初始化
+				 */
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
+				/**
+				 * 初始化上下文中的事件机制
+				 */
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				/**
+				 * 初始化其他的特殊Bean
+				 */
 				onRefresh();
 
 				// Check for listener beans and register them.
+				/**
+				 * 检查监听Bean，并且向容器注册
+				 */
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
+				/**
+				 * 实例化所有的(non-lazy-init)单件
+				 */
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+				/**
+				 * 发布容器事件，结束Refresh过程
+				 */
 				finishRefresh();
 			}
 
@@ -864,6 +894,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.freezeConfiguration();
 
 		// Instantiate all remaining (non-lazy-init) singletons.
+		/**
+		 * 这一步调用DefaultListableBeanFactory#preInstantiateSingletons() 完成对 (non-lazy-init) 的处理
+		 */
 		beanFactory.preInstantiateSingletons();
 	}
 
